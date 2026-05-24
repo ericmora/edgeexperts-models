@@ -9,13 +9,10 @@ Each model follows this directory layout:
 ```
 <model-id>/
 ├── model.json           # Model metadata (required)
-├── README.md            # Documentation
-└── platforms/           # Platform-specific builds
-    ├── macos/           # macOS (GGUF for llama.cpp / Metal)
-    ├── ios/             # iOS (CoreML .mlmodelc as .zip)
-    ├── android/         # Android (TFLite / LiteRT-LM)
-    └── linux/           # Linux (GGUF)
+└── README.md            # Documentation
 ```
+
+Binary files are hosted via **GitHub Releases** (supports files up to 2 GB each). Files are prefixed by platform (`macos-`, `ios-`, `android-`, `linux-`) since GitHub releases are flat (no subdirectories).
 
 ## model.json Schema
 
@@ -23,67 +20,38 @@ Each model follows this directory layout:
 {
   "id": "gemma-4-e2b-uncensored",
   "name": "Gemma 4 E2B Uncensored",
-  "description": "Gemma 4 2B parameters uncensored, optimized for edge deployment",
   "parameters": "2B",
   "contextWindow": 8192,
-  "quantization": "Q4_K_M",
-  "license": "gemma",
-  "author": "Google (uncensored variant)",
-  "baseUrl": "https://github.com/ericmora/edgeexperts-models/releases/download",
   "version": "1.0.0",
   "default": true,
+  "baseUrl": "https://github.com/ericmora/edgeexperts-models/releases/download",
   "platforms": {
     "macos": {
       "format": "gguf",
-      "filename": "model.gguf",
+      "filename": "macos-model.gguf",
       "sizeBytes": 2963546112,
-      "sha256": "",
       "split": true,
       "parts": [
-        {"filename": "model-split-00001-of-00003.gguf", "sizeBytes": 42949672},
-        {"filename": "model-split-00002-of-00003.gguf", "sizeBytes": 1614807040},
-        {"filename": "model-split-00003-of-00003.gguf", "sizeBytes": 1449787392}
+        {"filename": "macos-model-split-00001-of-00003.gguf", "sizeBytes": 43314624}
       ]
-    },
-    "ios": {
-      "format": "mlmodelc",
-      "filename": "model.mlmodelc.zip",
-      "sizeBytes": 1500000000,
-      "sha256": ""
-    },
-    "android": {
-      "format": "task",
-      "filename": "model.task",
-      "sizeBytes": 1300000000,
-      "sha256": ""
-    },
-    "linux": {
-      "format": "gguf",
-      "filename": "model.gguf",
-      "sizeBytes": 1400000000,
-      "sha256": ""
     }
   }
 }
 ```
 
+Add a new platform entry per target (macos, ios, android, linux). Use `split: true` + `parts[]` if the file exceeds 2 GB.
+
 ## Download URLs
 
-Model binaries are hosted via **GitHub Releases**. The download URL pattern:
+Assets are flat in releases. Platform prefix avoids name conflicts:
 
-Single file:
 ```
-{baseUrl}/{model-id}-v{version}/{platform}/{filename}
-```
-
-Split files (when `split: true`):
-```
-{baseUrl}/{model-id}-v{version}/{platform}/{part-filename}
+{baseUrl}/{model-id}-v{version}/{platform}-{filename}
 ```
 
 Example:
 ```
-https://github.com/ericmora/edgeexperts-models/releases/download/gemma-4-e2b-uncensored-v1.0.0/macos/model-split-00001-of-00003.gguf
+https://github.com/ericmora/edgeexperts-models/releases/download/gemma-4-e2b-uncensored-v1.0.0/macos-model-split-00001-of-00003.gguf
 ```
 
 After download, concatenate split parts in order to reconstruct the model.
@@ -92,13 +60,12 @@ After download, concatenate split parts in order to reconstruct the model.
 
 1. Create folder `<model-id>/` with `model.json` and `README.md`
 2. Export model for each target platform
-3. If file > 2GB, split using `llama-gguf-split --split-max-size 1500M <input> <output-prefix>`
+3. If file > 2 GB, split using `llama-gguf-split --split-max-size 1500M <input> <output-prefix>`
 4. Create a GitHub Release tagged `<model-id>-v<version>`
-5. Upload platform binaries as release assets
-6. Register in EdgeExperts Firestore `models` collection:
-```bash
-cd catalog && pnpm publish-models
-```
+5. Upload platform binaries as release assets (prefix filenames with `macos-`, `ios-`, etc.)
+6. Update `model.json` in the repo with correct filenames, sizes, and split info
+7. Publish to Firestore via Firebase Console (Web UI) or Admin SDK:
+   - Collection: `models`, Document ID: `<model-id>`
 
 ## Available Models
 

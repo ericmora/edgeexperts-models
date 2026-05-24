@@ -13,33 +13,29 @@
   "platforms": {
     "macos": {
       "format": "gguf",
-      "filename": "model.gguf",
+      "filename": "macos-model.gguf",
       "sizeBytes": 2963546112,
-      "sha256": "",
       "split": true,
       "parts": [
-        {"filename": "model-split-00001-of-00003.gguf", "sizeBytes": 42949672},
-        {"filename": "model-split-00002-of-00003.gguf", "sizeBytes": 1614807040},
-        {"filename": "model-split-00003-of-00003.gguf", "sizeBytes": 1449787392}
+        {"filename": "macos-model-split-00001-of-00003.gguf", "sizeBytes": 43314624},
+        {"filename": "macos-model-split-00002-of-00003.gguf", "sizeBytes": 1614807232},
+        {"filename": "macos-model-split-00003-of-00003.gguf", "sizeBytes": 1448614752}
       ]
     },
     "ios": {
       "format": "mlmodelc",
-      "filename": "model.mlmodelc.zip",
-      "sizeBytes": 1500000000,
-      "sha256": ""
+      "filename": "ios-model.model",
+      "sizeBytes": 1500000000
     },
     "android": {
       "format": "task",
-      "filename": "model.task",
-      "sizeBytes": 1300000000,
-      "sha256": ""
+      "filename": "android-model.model",
+      "sizeBytes": 1300000000
     },
     "linux": {
       "format": "gguf",
-      "filename": "model.gguf",
-      "sizeBytes": 1400000000,
-      "sha256": ""
+      "filename": "linux-model.gguf",
+      "sizeBytes": 1400000000
     }
   }
 }
