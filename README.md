@@ -36,8 +36,14 @@ Each model follows this directory layout:
     "macos": {
       "format": "gguf",
       "filename": "model.gguf",
-      "sizeBytes": 1400000000,
-      "sha256": ""
+      "sizeBytes": 2963546112,
+      "sha256": "",
+      "split": true,
+      "parts": [
+        {"filename": "model-split-00001-of-00003.gguf", "sizeBytes": 42949672},
+        {"filename": "model-split-00002-of-00003.gguf", "sizeBytes": 1614807040},
+        {"filename": "model-split-00003-of-00003.gguf", "sizeBytes": 1449787392}
+      ]
     },
     "ios": {
       "format": "mlmodelc",
@@ -65,22 +71,34 @@ Each model follows this directory layout:
 
 Model binaries are hosted via **GitHub Releases**. The download URL pattern:
 
+Single file:
 ```
 {baseUrl}/{model-id}-v{version}/{platform}/{filename}
 ```
 
+Split files (when `split: true`):
+```
+{baseUrl}/{model-id}-v{version}/{platform}/{part-filename}
+```
+
 Example:
 ```
-https://github.com/ericmora/edgeexperts-models/releases/download/gemma-4-e2b-uncensored-v1.0.0/macos/model.gguf
+https://github.com/ericmora/edgeexperts-models/releases/download/gemma-4-e2b-uncensored-v1.0.0/macos/model-split-00001-of-00003.gguf
 ```
+
+After download, concatenate split parts in order to reconstruct the model.
 
 ## Adding a New Model
 
 1. Create folder `<model-id>/` with `model.json` and `README.md`
 2. Export model for each target platform
-3. Create a GitHub Release tagged `<model-id>-v<version>`
-4. Upload platform binaries as release assets
-5. Register in EdgeExperts Firestore `models` collection
+3. If file > 2GB, split using `llama-gguf-split --split-max-size 1500M <input> <output-prefix>`
+4. Create a GitHub Release tagged `<model-id>-v<version>`
+5. Upload platform binaries as release assets
+6. Register in EdgeExperts Firestore `models` collection:
+```bash
+cd catalog && pnpm publish-models
+```
 
 ## Available Models
 
