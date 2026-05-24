@@ -2,47 +2,91 @@
 
 Public repository for LLM models used by [EdgeExperts](https://github.com/ericmora/edgeexperts) — an on-device RAG platform with multi-expert debate.
 
-## Available Models
+## Standard Model Structure
 
-| Model | Parameters | Format | Description |
-|-------|-----------|--------|-------------|
-| [gemma-4-e2b-uncensored](./gemma-4-e2b-uncensored/) | 2B | LiteRT-LM | Gemma 4 E2B uncensored, optimized for edge deployment |
+Each model follows this directory layout:
 
-## Structure
+```
+<model-id>/
+├── model.json           # Model metadata (required)
+├── README.md            # Documentation
+└── platforms/           # Platform-specific builds
+    ├── macos/           # macOS (GGUF for llama.cpp / Metal)
+    ├── ios/             # iOS (CoreML .mlmodelc as .zip)
+    ├── android/         # Android (TFLite / LiteRT-LM)
+    └── linux/           # Linux (GGUF)
+```
 
-Each model has its own folder containing:
-- `README.md` — Model documentation, export process, usage details
-- `model.task` — LiteRT-LM model file (downloaded via app, not in repo)
-
-## Adding a New Model
-
-1. Create a folder: `<model-name>/`
-2. Add `README.md` with model details, export instructions, and usage
-3. Export the model to LiteRT-LM format using `litert-torch`
-4. Register the model in EdgeExperts Firestore `models` collection
-
-## Firestore Schema
+## model.json Schema
 
 ```json
 {
-  "models": {
-    "<modelId>": {
-      "name": "Gemma 4 E2B Uncensored",
-      "folder": "gemma-4-e2b-uncensored",
-      "repo": "ericmora/edgeexperts-models",
-      "branch": "main",
-      "format": "litert-lm",
-      "parameters": "2B",
-      "contextWindow": 8192,
-      "downloadUrl": "https://raw.githubusercontent.com/ericmora/edgeexperts-models/main/gemma-4-e2b-uncensored/model.task",
-      "sizeBytes": 0,
-      "description": "Gemma 4 E2B uncensored variant for edge deployment",
-      "active": true,
-      "createdAt": "2026-05-24T00:00:00Z"
+  "id": "gemma-4-e2b-uncensored",
+  "name": "Gemma 4 E2B Uncensored",
+  "description": "Gemma 4 2B parameters uncensored, optimized for edge deployment",
+  "parameters": "2B",
+  "contextWindow": 8192,
+  "quantization": "Q4_K_M",
+  "license": "gemma",
+  "author": "Google (uncensored variant)",
+  "baseUrl": "https://github.com/ericmora/edgeexperts-models/releases/download",
+  "version": "1.0.0",
+  "default": true,
+  "platforms": {
+    "macos": {
+      "format": "gguf",
+      "filename": "model.gguf",
+      "sizeBytes": 1400000000,
+      "sha256": ""
+    },
+    "ios": {
+      "format": "mlmodelc",
+      "filename": "model.mlmodelc.zip",
+      "sizeBytes": 1500000000,
+      "sha256": ""
+    },
+    "android": {
+      "format": "task",
+      "filename": "model.task",
+      "sizeBytes": 1300000000,
+      "sha256": ""
+    },
+    "linux": {
+      "format": "gguf",
+      "filename": "model.gguf",
+      "sizeBytes": 1400000000,
+      "sha256": ""
     }
   }
 }
 ```
+
+## Download URLs
+
+Model binaries are hosted via **GitHub Releases**. The download URL pattern:
+
+```
+{baseUrl}/{model-id}-v{version}/{platform}/{filename}
+```
+
+Example:
+```
+https://github.com/ericmora/edgeexperts-models/releases/download/gemma-4-e2b-uncensored-v1.0.0/macos/model.gguf
+```
+
+## Adding a New Model
+
+1. Create folder `<model-id>/` with `model.json` and `README.md`
+2. Export model for each target platform
+3. Create a GitHub Release tagged `<model-id>-v<version>`
+4. Upload platform binaries as release assets
+5. Register in EdgeExperts Firestore `models` collection
+
+## Available Models
+
+| Model | Parameters | Default | Description |
+|-------|-----------|---------|-------------|
+| [gemma-4-e2b-uncensored](./gemma-4-e2b-uncensored/) | 2B | Yes | Gemma 4 E2B uncensored, optimized for edge |
 
 ## License
 

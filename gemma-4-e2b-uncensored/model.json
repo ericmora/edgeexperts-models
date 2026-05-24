@@ -1,0 +1,39 @@
+{
+  "id": "gemma-4-e2b-uncensored",
+  "name": "Gemma 4 E2B Uncensored",
+  "description": "Gemma 4 2B parameters uncensored variant, optimized for edge deployment with 8K context window",
+  "parameters": "2B",
+  "contextWindow": 8192,
+  "quantization": "Q4_K_M",
+  "license": "gemma",
+  "author": "Google (uncensored variant by TrevorJS)",
+  "baseUrl": "https://github.com/ericmora/edgeexperts-models/releases/download",
+  "version": "1.0.0",
+  "default": true,
+  "platforms": {
+    "macos": {
+      "format": "gguf",
+      "filename": "model.gguf",
+      "sizeBytes": 1400000000,
+      "sha256": ""
+    },
+    "ios": {
+      "format": "mlmodelc",
+      "filename": "model.mlmodelc.zip",
+      "sizeBytes": 1500000000,
+      "sha256": ""
+    },
+    "android": {
+      "format": "task",
+      "filename": "model.task",
+      "sizeBytes": 1300000000,
+      "sha256": ""
+    },
+    "linux": {
+      "format": "gguf",
+      "filename": "model.gguf",
+      "sizeBytes": 1400000000,
+      "sha256": ""
+    }
+  }
+}
