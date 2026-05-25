@@ -1,0 +1,26 @@
+{
+  "id": "phi-35-mini-instruct",
+  "name": "Phi-3.5 Mini Instruct",
+  "description": "Microsoft Phi-3.5-mini-instruct (3.8B) optimized for Apple Neural Engine via Core ML with 4-bit palettization.",
+  "parameters": "3.8B",
+  "contextWindow": 2048,
+  "version": "1.0.0",
+  "default": true,
+  "baseUrl": "https://github.com/ericmora/edgeexperts-models/releases/download",
+  "platforms": {
+    "ios": {
+      "format": "coreml",
+      "filename": "phi-35-mini-ios.mlmodelc.zip",
+      "sizeBytes": 1825361100,
+      "extractZip": true,
+      "modelDir": "phi-35-mini-ios.mlmodelc"
+    },
+    "macos": {
+      "format": "coreml",
+      "filename": "phi-35-mini-ios.mlmodelc.zip",
+      "sizeBytes": 1825361100,
+      "extractZip": true,
+      "modelDir": "phi-35-mini-ios.mlmodelc"
+    }
+  }
+}
